@@ -1,9 +1,10 @@
-package com.seguranca_info.repository;
+package com.seguranca_info.demo.repository;
 
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.seguranca_info.models.Postagem;
+import com.seguranca_info.demo.models.Postagem;
+
 import java.util.List;
 
 

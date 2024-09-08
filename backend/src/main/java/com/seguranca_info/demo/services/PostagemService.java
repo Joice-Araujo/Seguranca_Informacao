@@ -1,4 +1,4 @@
-package com.seguranca_info.services;
+package com.seguranca_info.demo.services;
 
 import java.util.Comparator;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.seguranca_info.models.Postagem;
-import com.seguranca_info.repository.PostagemRepository;
+import com.seguranca_info.demo.models.Postagem;
+import com.seguranca_info.demo.repository.PostagemRepository;
 
 
 public class PostagemService {

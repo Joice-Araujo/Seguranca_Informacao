@@ -1,4 +1,4 @@
-package com.seguranca_info.services;
+package com.seguranca_info.demo.services;
 
 import java.util.Comparator;
 import java.util.List;
@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.seguranca_info.models.Usuario;
-import com.seguranca_info.repository.UsuarioRepository;
+import com.seguranca_info.demo.models.Usuario;
+import com.seguranca_info.demo.repository.UsuarioRepository;
 
 
 @Service

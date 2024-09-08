@@ -1,4 +1,4 @@
-package com.seguranca_info.models;
+package com.seguranca_info.demo.models;
 
 import java.util.Date;
 

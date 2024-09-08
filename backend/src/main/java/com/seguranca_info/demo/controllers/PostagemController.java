@@ -1,4 +1,4 @@
-package com.seguranca_info.controllers;
+package com.seguranca_info.demo.controllers;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seguranca_info.models.Postagem;
-import com.seguranca_info.services.PostagemService;
+import com.seguranca_info.demo.models.Postagem;
+import com.seguranca_info.demo.services.PostagemService;
 
 @RestController
 @RequestMapping("/postagem")

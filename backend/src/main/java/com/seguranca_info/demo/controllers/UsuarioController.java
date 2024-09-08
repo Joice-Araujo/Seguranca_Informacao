@@ -1,4 +1,4 @@
-package com.seguranca_info.controllers;
+package com.seguranca_info.demo.controllers;
 
 import java.util.List;
 
@@ -8,8 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.seguranca_info.models.Usuario;
-import com.seguranca_info.services.UsuarioService;
+import com.seguranca_info.demo.models.Usuario;
+import com.seguranca_info.demo.services.UsuarioService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
