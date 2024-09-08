@@ -1,6 +1,6 @@
 package com.seguranca_info.models;
 
-import java.sql.Date;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,5 +25,8 @@ public class Usuario {
     private String email;
 
     private String senha;
+
+    private Date createdAt = new Date();
+
 
 }

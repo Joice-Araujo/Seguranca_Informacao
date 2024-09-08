@@ -1,7 +1,8 @@
 package com.seguranca_info.models;
 
-import java.util.List;
+import java.util.Date;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -18,11 +19,14 @@ import lombok.Setter;
 
 @Document
 public class Postagem {
+    @Id
     private String id;
+
+    private String userId;
 
     private String conteudo;
 
-    private List<String> tags;
-
     private String titulo;
+
+    private Date createdAt = new Date();
 }
