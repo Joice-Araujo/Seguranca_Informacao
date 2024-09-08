@@ -18,7 +18,7 @@ import com.seguranca_info.demo.models.Postagem;
 import com.seguranca_info.demo.services.PostagemService;
 
 @RestController
-@RequestMapping("/postagem")
+@RequestMapping("postagem")
 public class PostagemController {
     
     @Autowired
