@@ -2,7 +2,11 @@ package com.seguranca_info.controllers;
 
 import java.util.List;
 
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,23 +27,37 @@ public class UsuarioController {
     private UsuarioService service;
 
     @GetMapping(value = "/{id}")
-    public Usuario findUsuarioById(@PathVariable("id") String id) throws Exception {
-        return this.service.getById(id);
+    public ResponseEntity<Usuario> findUsuarioById(@PathVariable("id") String id) throws Exception {
+        try {
+            Usuario usuario = this.service.getById(id);
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
+            
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping
-    public List<Usuario> findAllUsuario(){
-        return this.service.getAll();
+    public ResponseEntity<List<Usuario>> findAllUsuario(){
+        List<Usuario> usuarios = this.service.getAll();
+        return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
     
     @PostMapping
-    public Usuario createUsuario(@RequestBody Usuario usuario){
-        return this.service.create(usuario);
+    public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario){
+        Usuario usuarioCreated = this.service.create(usuario);
+        return new ResponseEntity<>(usuarioCreated, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public Usuario updateUsuario(@RequestBody Usuario usuario, @PathVariable("id") String id) throws Exception{
-        return this.service.update(id, usuario);
+    public ResponseEntity<Usuario> updateUsuario(@RequestBody Usuario usuario, @PathVariable("id") String id) throws Exception{
+        try {
+            Usuario usuarioUpdated = this.service.update(id, usuario);
+            return new ResponseEntity<>(usuarioUpdated, HttpStatus.OK);
+            
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 }
