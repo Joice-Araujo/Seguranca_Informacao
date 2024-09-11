@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.seguranca_info.demo.dto.UserDto;
 
 import com.seguranca_info.demo.models.Usuario;
 import com.seguranca_info.demo.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Service
@@ -17,9 +19,8 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario create(Usuario usuario){
-        return this.usuarioRepository.save(usuario);
-    }
+    @Autowired
+    private PasswordEncoder passwordEnconder;
 
     public List<Usuario> getAll(){
         return this.usuarioRepository.findAll().stream().sorted(Comparator.comparing(user -> user.getCreatedAt())).collect(Collectors.toList());
@@ -35,12 +36,12 @@ public class UsuarioService {
         }
     }
 
-    public Usuario update(String usuarioId , Usuario usuario) throws Exception{
+    public Usuario update(String usuarioId , UserDto usuario) throws Exception{
         Usuario usuarioAtualizado = this.getById(usuarioId);
 
-        usuarioAtualizado.setEmail(usuario.getEmail());
-        usuarioAtualizado.setSenha(usuario.getSenha());
-        usuarioAtualizado.setUsername(usuario.getUsername());
+        usuarioAtualizado.setEmail(usuario.email());
+        usuarioAtualizado.setSenha( passwordEnconder.encode(usuario.senha()));
+        usuarioAtualizado.setUsername(usuario.username());
 
         return this.usuarioRepository.save(usuarioAtualizado);
     }

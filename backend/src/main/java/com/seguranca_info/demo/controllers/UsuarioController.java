@@ -13,9 +13,10 @@ import com.seguranca_info.demo.services.UsuarioService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import com.seguranca_info.demo.dto.UserDto;
+
 
 
 @RequestMapping("usuario")
@@ -42,15 +43,8 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
-    
-    @PostMapping
-    public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario){
-        Usuario usuarioCreated = this.service.create(usuario);
-        return new ResponseEntity<>(usuarioCreated, HttpStatus.CREATED);
-    }
-
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Usuario> updateUsuario(@RequestBody Usuario usuario, @PathVariable("id") String id) throws Exception{
+    public ResponseEntity<Usuario> updateUsuario(@RequestBody UserDto usuario, @PathVariable("id") String id) throws Exception{
         try {
             Usuario usuarioUpdated = this.service.update(id, usuario);
             return new ResponseEntity<>(usuarioUpdated, HttpStatus.OK);
