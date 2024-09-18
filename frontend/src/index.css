@@ -72,6 +72,9 @@ button:focus-visible {
   }
 } */
 
+:root {
+  background-color: rgba(187, 206, 248, 0.753);
+}
 a {
   color: blue;
   text-decoration: underline;
@@ -91,6 +94,16 @@ a {
   .btnLogin {
     @apply  px-4 py-2  bg-purple-700 text-white font-bold rounded  hover:bg-blue-600 
     focus:outline-none focus:ring-2  focus:ring-blue-300  disabled:bg-gray-400
+
+  }
+
+  .btnExcluir {
+    @apply  px-4 py-2  bg-red-600 text-white font-bold rounded  hover:bg-orange-600 
+    focus:outline-none focus:ring-2  focus:ring-orange-600  disabled:bg-gray-400
+
+  }
+  .h2 {
+    @apply  text-center text-3xl font-semibold mb-6 text-gray-700
 
   }
 }

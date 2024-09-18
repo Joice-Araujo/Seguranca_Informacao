@@ -14,7 +14,7 @@ export function Login() {
   return (
     <div className="mt-28 flex items-center justify-center">
       <div className=" max-w-sm w-full bg-white p-6 rounded-lg shadow-md border  border-gray-500">
-        <h2 className="text-center text-3xl font-semibold mb-6 text-gray-700">Login</h2>
+        <h2 className="h2">Login</h2>
 
         <div className="mb-4">
           <Input
