@@ -106,4 +106,10 @@ a {
     @apply  text-center text-3xl font-semibold mb-6 text-gray-700
 
   }
+
+  .divBtn{
+    @apply mt-2 flex items-center justify-center
+  }
+
+  
 }

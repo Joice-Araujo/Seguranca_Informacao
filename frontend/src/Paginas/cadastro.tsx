@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Btn } from "../Componentes/btn";
 import { Input } from "../Componentes/input";
+import { Check } from "../Componentes/inputCheckbox";
 
 export function Cadastro() {
 
     const [username, setUsername] = useState('');
     const [userEmail, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [opcional, setOpcional] = useState('');
+    const [obrigatorio, setObrigatorio] = useState('');
 
     const logar = () => {
 
@@ -50,7 +53,30 @@ export function Cadastro() {
                     />
                 </div>
 
-                <div className="text-center">
+                <div>
+
+                    <div className="alinhandoCheckbox">
+                        <Check
+                            label="mensagens promocionais opcional "
+                            type="checkbox"
+                            value={opcional}
+                            setValue={setOpcional}
+                            labelClassName=""
+                            inputClassName=""
+                        />
+                    </div>
+
+                    <Check
+                        label="termos obrigatórios"
+                        type="checkbox"
+                        value={obrigatorio}
+                        setValue={setObrigatorio}
+                        labelClassName=""
+                        inputClassName=""
+                    />
+                </div>
+
+                <div className="divBtn">
                     <Btn label="Cadastrar" onClick={logar} btnClassName="btnLogin" />
                 </div>
             </div>
