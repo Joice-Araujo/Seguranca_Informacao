@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { authService } from "../Services/auth-service";
+import useAuth from "../Hooks/useAuth";
 
 
 export function SideBar() {
@@ -10,6 +12,8 @@ export function SideBar() {
   const blog = () => {
     navigate("/blog"); // Navega para a rota do blog
   };
+
+  const auth = useAuth()
 
   return (
 
@@ -28,7 +32,7 @@ export function SideBar() {
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
           <div className="grid place-items-center mr-4">
-            colocar icone aqui
+            
           </div>
           Blog
         </div>
@@ -41,7 +45,7 @@ export function SideBar() {
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
             <div className="grid place-items-center mr-4">
-              colocar icone aqui
+              
             </div>
             Perfil
         </div>
@@ -50,26 +54,27 @@ export function SideBar() {
         <div
           role="button"
           tabIndex={0}
+          onClick={() => auth?.logout()}
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
           <div className="grid place-items-center mr-4">
-            colocar icone aqui
+            
           </div>
           Sair
         </div>
         
 
         {/* Button 4 */}
-        <div
+        {/* <div
           role="button"
           tabIndex={0}
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
           <div className="grid place-items-center mr-4">
-            colocar icone aqui
+            
           </div>
           Excluir Conta
-        </div>
+        </div> */}
 
       </nav>
     </div>

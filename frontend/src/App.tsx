@@ -2,23 +2,19 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css'
 import Rotas from './Rotas/rotas';
-import { SideBar } from './Componentes/sideBar';
-import { Perfil } from './Paginas/perfil';
+import { AuthProvider } from './Context/auth';
 
 function App() {
 
   return (
-    <>
-
-      <Router>
-        <div className="flex">
-          <SideBar />
-          <Rotas/>
-          {/* <Perfil /> */}
-        </div>
-      </Router>
-
-    </>
+    <AuthProvider>
+        <Router>
+          <div className="flex">
+            <Rotas />
+            {/* <Perfil /> */}
+          </div>
+        </Router>
+    </AuthProvider>
   )
 }
 
