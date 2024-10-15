@@ -1,27 +1,35 @@
 import { useState } from "react";
 import { Btn } from "../Componentes/btn";
 import { Input } from "../Componentes/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { LoginType } from "../Interfaces/ILogin";
+import useAuth from "../Hooks/useAuth";
 
 export function Login() {
-  const [userEmail, setUserEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setusername] = useState('');
+  const [password, setPassword] = useState("");
+  const nav = useNavigate()
+  const auth = useAuth()
 
-  const logar = () => {
+  const logar = async () => {
+    const data : LoginType = {senha: password, username: username }
 
+    await auth?.login(data)
+
+    nav("/blog")
   };
 
   return (
-    <div className="mt-28 flex items-center justify-center">
-      <div className=" max-w-sm w-full bg-white p-6 rounded-lg shadow-md border  border-gray-500">
+    <div className="mt-28 grow flex items-center justify-center ">
+      <div className=" max-w-sm w-full bg-white p-6 rounded-lg shadow-md border border-gray-500">
         <h2 className="h2">Login</h2>
 
         <div className="mb-4">
           <Input
-            label="E-mail"
+            label="Username"
             type="text"
-            value={userEmail}
-            setValue={setUserEmail}
+            value={username}
+            setValue={setusername}
             labelClassName="labelLogin "
             inputClassName="inputLogin"
           />

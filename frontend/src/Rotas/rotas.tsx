@@ -10,10 +10,9 @@ export const Rotas = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/cadastro" element={<PrivateRoute page={<Cadastro />}/>} /> 
+      <Route path="/cadastro" element={<Cadastro />} /> 
       <Route path="/perfil" element={<PrivateRoute page={<Perfil />}/>} /> 
       <Route path="/blog" element={<PrivateRoute page={<Blog />}/>} />
-      <Route path="/perfil" element={<PrivateRoute page={<Perfil />}/>} />
     </Routes>
   );
 };

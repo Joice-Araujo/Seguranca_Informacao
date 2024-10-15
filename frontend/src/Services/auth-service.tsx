@@ -32,8 +32,8 @@ export const authService = {
     getRole(){
         const token = this.getToken()
         if (token) {
-            const role = jwtDecode<JwtPayload>(token)?.role
-            return role;
+            const username = jwtDecode<JwtPayload>(token)?.sub
+            return typeof username == "string" ? username : null
         }
         return null;
     }
