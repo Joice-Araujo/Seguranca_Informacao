@@ -3,6 +3,7 @@ package com.seguranca_info.demo.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.seguranca_info.demo.dto.PostagemDto;
 import com.seguranca_info.demo.models.Postagem;
 import com.seguranca_info.demo.services.PostagemService;
 
@@ -25,9 +27,13 @@ public class PostagemController {
     private PostagemService postagemService;
 
     @PostMapping
-    public ResponseEntity<Postagem> createPostagem(@RequestBody Postagem postagem) {
-        Postagem createdPostagem = postagemService.createPostagem(postagem);
-        return new ResponseEntity<>(createdPostagem, HttpStatus.CREATED);
+    public ResponseEntity<Postagem> createPostagem(@RequestBody PostagemDto postagem) throws NotFoundException {
+        try {
+            Postagem createdPostagem = postagemService.createPostagem(postagem);
+            return new ResponseEntity<>(createdPostagem, HttpStatus.CREATED);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } 
     }
 
     @GetMapping("/{id}")
@@ -36,7 +42,7 @@ public class PostagemController {
             Postagem postagem = postagemService.getOnePostagem(id);
             return new ResponseEntity<>(postagem, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -58,7 +64,7 @@ public class PostagemController {
             Postagem updatedPostagem = postagemService.updatePostagem(id,postagem);
             return new ResponseEntity<>(updatedPostagem, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
