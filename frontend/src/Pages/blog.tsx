@@ -10,7 +10,7 @@ import useAuth from "../Hooks/useAuth";
 
 
 
-export function Blog() {
+export function CriarBlog() {
     const [titulo, setTitulo] = useState('');
     const [conteudo, setConteudo] = useState('');
     const auth = useAuth();

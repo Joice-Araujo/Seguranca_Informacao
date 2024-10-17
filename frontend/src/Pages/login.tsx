@@ -16,7 +16,7 @@ export function Login() {
 
     await auth?.login(data)
 
-    nav("/blog")
+    nav("/create-post")
   };
 
   return (

@@ -40,5 +40,16 @@ export const blogService = {
                 console.error("Erro ao criar o blog:", error);
             }
         }
+    },
+    
+    getBlogByUser : async () => {
+        await api.get(`postagem/user`, {headers : {Authorization : `Bearer ${authService.getToken()}`}}).then(resp => console.log(resp))
+        // await fetch(`http://localhost:8080/postagem/user`, {
+        //     method: "GET",
+        //     headers: {
+        //         "Authorization" : ,
+        //         "Content-Type": "application/json"
+        //     }
+        // }).then(resp => console.log(resp))
     }
 };
