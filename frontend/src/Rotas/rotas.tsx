@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import { Login } from "../Paginas/login";
-import { Cadastro } from "../Paginas/cadastro";
-import { Perfil } from "../Paginas/perfil";
-import { Blog } from "../Paginas/blog";
+import { Login } from "../Pages/login";
+import { Cadastro } from "../Pages/cadastro";
+import { Perfil } from "../Pages/perfil";
+import { Blog } from "../Pages/blog";
 import { PrivateRoute } from "./private-routes";
 
 
