@@ -36,6 +36,10 @@ public class UsuarioService {
         }
     }
 
+    public Usuario getUsuarioByUsername(String username){
+        return this.usuarioRepository.findByUsername(username).orElseThrow();
+    }
+
     public Usuario update(String usuarioId , UserDto usuario) throws Exception{
         Usuario usuarioAtualizado = this.getById(usuarioId);
 

@@ -33,7 +33,7 @@ public class UsuarioController {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
             
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -50,7 +50,7 @@ public class UsuarioController {
             return new ResponseEntity<>(usuarioUpdated, HttpStatus.OK);
             
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

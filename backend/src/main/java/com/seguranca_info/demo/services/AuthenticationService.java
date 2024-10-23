@@ -31,7 +31,7 @@ public class AuthenticationService {
         Usuario user = new Usuario(dto);
         user.setSenha(passwordEnconder.encode(dto.senha()));
 
-        Usuario response = userRepository.save(user);
+        userRepository.save(user);
         String token = jwtService.generateToken(user);
 
         return new AuthenticationResponse(token);
