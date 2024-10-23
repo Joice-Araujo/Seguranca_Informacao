@@ -12,7 +12,6 @@ export function Perfil() {
 
     return (
         <>
-            <SideBar />
             <div className="flex flex-col mx-auto">
                 <div className="flex mx-auto">
                     <Input label="Título" type="text" value={titulo} setValue={setTitulo} labelClassName="text-3xl text-center" inputClassName="border-slate-500 solid border-2 rounded-xl p-2 w-96" ></Input>

@@ -1,9 +1,9 @@
-import { BlogType } from "../Interfaces/IBlog";
+import { CreateBlog } from "../Interfaces/CreateBlog";
 import api from "./api";
 import { authService } from "./auth-service";
 
 export const blogService = {
-    createBlog: async (data: BlogType) => {
+    createBlog: async (data: CreateBlog) => {
         console.log(data)
         try {
 
@@ -19,7 +19,7 @@ export const blogService = {
                     // Lida com erros HTTP (4xx, 5xx)
                     throw new Error(`Erro HTTP! Status: ${response.status}`);
                 }
-                console.log(response.json()); 
+                console.log(response.json());
                 alert("Post criado com sucesso");
             })
                 .then(data => {
@@ -28,7 +28,7 @@ export const blogService = {
                 .catch(error => {
                     console.error("Erro ao realizar a requisição:", error);
                 });
-                
+
 
         } catch (error: any) {
             // Se o erro for de autenticação, você pode verificar o código do status
@@ -41,15 +41,10 @@ export const blogService = {
             }
         }
     },
-    
-    getBlogByUser : async () => {
-        await api.get(`postagem/user`, {headers : {Authorization : `Bearer ${authService.getToken()}`}}).then(resp => console.log(resp))
-        // await fetch(`http://localhost:8080/postagem/user`, {
-        //     method: "GET",
-        //     headers: {
-        //         "Authorization" : ,
-        //         "Content-Type": "application/json"
-        //     }
-        // }).then(resp => console.log(resp))
+
+    getBlogByUser: async () => {
+        return await api.get(`postagem/user`, {
+            headers: { Authorization: `Bearer ${authService.getToken()}` }
+        })
     }
 };

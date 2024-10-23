@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Input } from "../Componentes/input";
 import { Btn } from "../Componentes/btn";
-import { SideBar } from "../Componentes/sideBar";
 import { blogService } from "../Services/blog-service";
-import { BlogType } from "../Interfaces/IBlog";
+import { BlogType } from "../Interfaces/CreateBlog";
 import { TextArea } from "../Componentes/textArea";
 import { authService } from "../Services/auth-service";
 import useAuth from "../Hooks/useAuth";
@@ -34,7 +33,6 @@ export function CriarBlog() {
 
     return (
         <>
-            <SideBar />
             <div className="flex flex-col mx-auto">
                 <div className="flex mx-auto">
                     <Input label="Título" type="text" value={titulo} setValue={setTitulo} labelClassName="text-3xl text-center" inputClassName="border-slate-500 solid border-2 rounded-xl p-2 w-96" ></Input>

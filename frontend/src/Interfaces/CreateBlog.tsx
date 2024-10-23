@@ -1,4 +1,4 @@
-export type BlogType = {
+export type CreateBlog = {
     titulo : string
     conteudo : string
     username : string
