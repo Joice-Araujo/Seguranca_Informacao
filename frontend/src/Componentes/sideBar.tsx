@@ -1,19 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { authService } from "../Services/auth-service";
 import useAuth from "../Hooks/useAuth";
+import { FaUser, FaPlus, FaList, FaSignOutAlt } from "react-icons/fa"; 
 
 
 export function SideBar() {
   const navigate = useNavigate();
 
   const perfil = () => {
-    navigate("/perfil"); // Navega para a rota do blog
+    navigate("/perfil"); // Navega para a página de perfil
   };
   const post = () => {
-    navigate("/create-post"); // Navega para a rota do post
+    navigate("/create-post"); // Navega para a página de criação de post
   };
   const myPosts = () => {
-    navigate("/my-posts"); // Navega para a rota do post
+    navigate("/my-posts"); // Navega para a página de visualização dos posts
   };
 
   const auth = useAuth()
@@ -37,6 +38,7 @@ export function SideBar() {
           <div className="grid place-items-center mr-4">
             
           </div>
+          <FaPlus className="mr-4" />
           Criar Postagem
         </div>
 
@@ -49,6 +51,7 @@ export function SideBar() {
           <div className="grid place-items-center mr-4">
             
           </div>
+          <FaList className="mr-4" />
           Minhas Postagens
         </div>
 
@@ -62,6 +65,7 @@ export function SideBar() {
             <div className="grid place-items-center mr-4">
               
             </div>
+            <FaUser className="mr-4" />
             Perfil
         </div>
 
@@ -75,6 +79,7 @@ export function SideBar() {
           <div className="grid place-items-center mr-4">
             
           </div>
+          <FaSignOutAlt className="mr-4" />
           Sair
         </div>
         

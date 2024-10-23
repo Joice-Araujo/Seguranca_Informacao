@@ -16,12 +16,12 @@ export default function PostCard(props : Blog ) {
           </div> */}
         </div>
         {!dropBox && (
-          <p onClick={() => setDropbox(!dropBox)}>Ler mais</p>
+          <p onClick={() => setDropbox(!dropBox)} className="cursor-pointer text-blue-500">Ler mais</p>
         )}
 
         {dropBox && (
           <div>
-            <p onClick={() => setDropbox(!dropBox)}>Ler menos</p>
+            <p onClick={() => setDropbox(!dropBox)} className="cursor-pointer text-blue-500">Ler menos</p>
             <p className='bg-white'>{props.conteudo}</p>
           </div>
         )}
