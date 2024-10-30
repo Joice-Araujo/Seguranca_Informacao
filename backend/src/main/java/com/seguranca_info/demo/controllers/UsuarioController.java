@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.seguranca_info.demo.dto.ChangePasswordDto;
 import com.seguranca_info.demo.dto.UserDto;
-
-
 
 @RequestMapping("usuario")
 @RestController
 public class UsuarioController {
-    
+
     @Autowired
     private UsuarioService service;
 
@@ -31,26 +31,37 @@ public class UsuarioController {
         try {
             Usuario usuario = this.service.getById(id);
             return new ResponseEntity<>(usuario, HttpStatus.OK);
-            
+
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> findAllUsuario(){
+    public ResponseEntity<List<Usuario>> findAllUsuario() {
         List<Usuario> usuarios = this.service.getAll();
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<Usuario> updateUsuario(@RequestBody UserDto usuario, @PathVariable("id") String id) throws Exception{
+    @GetMapping("/username/{username}")
+    public ResponseEntity<Usuario> getUserByUsername(@PathVariable("username") String username) {
         try {
-            Usuario usuarioUpdated = this.service.update(id, usuario);
-            return new ResponseEntity<>(usuarioUpdated, HttpStatus.OK);
-            
+            Usuario user = service.getUsuarioByUsername(username);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Usuario> updateUsuario(@RequestBody UserDto usuario, @PathVariable("id") String id)
+            throws Exception {
+        return this.service.update(id, usuario);
+    }
+
+    @PutMapping("change-password/{id}")
+    public ResponseEntity<HttpStatus> changePassoword(@PathVariable String id, @RequestBody ChangePasswordDto data) {
+        return service.updateSenha(id, data);
     }
 }

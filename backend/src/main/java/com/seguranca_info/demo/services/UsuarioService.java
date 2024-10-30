@@ -6,13 +6,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.seguranca_info.demo.dto.ChangePasswordDto;
 import com.seguranca_info.demo.dto.UserDto;
 
 import com.seguranca_info.demo.models.Usuario;
 import com.seguranca_info.demo.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 
 @Service
 public class UsuarioService {
@@ -20,13 +23,14 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private PasswordEncoder passwordEnconder;
+    private PasswordEncoder passwordEncoder;
 
-    public List<Usuario> getAll(){
-        return this.usuarioRepository.findAll().stream().sorted(Comparator.comparing(user -> user.getCreatedAt())).collect(Collectors.toList());
+    public List<Usuario> getAll() {
+        return this.usuarioRepository.findAll().stream().sorted(Comparator.comparing(user -> user.getCreatedAt()))
+                .collect(Collectors.toList());
     }
 
-    public Usuario getById(String id) throws Exception{
+    public Usuario getById(String id) throws Exception {
         Optional<Usuario> resp = this.usuarioRepository.findById(id);
 
         if (!resp.isPresent()) {
@@ -36,17 +40,43 @@ public class UsuarioService {
         }
     }
 
-    public Usuario getUsuarioByUsername(String username){
+    public Usuario getUsuarioByUsername(String username) {
         return this.usuarioRepository.findByUsername(username).orElseThrow();
     }
 
-    public Usuario update(String usuarioId , UserDto usuario) throws Exception{
-        Usuario usuarioAtualizado = this.getById(usuarioId);
+    public ResponseEntity<Usuario> update(String usuarioId, UserDto usuario) throws Exception {
+        Optional<Usuario> userExist = this.usuarioRepository.findByUsername(usuario.username());
 
+        if (userExist.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+        Usuario usuarioAtualizado = this.getById(usuarioId);
         usuarioAtualizado.setEmail(usuario.email());
-        usuarioAtualizado.setSenha( passwordEnconder.encode(usuario.senha()));
         usuarioAtualizado.setUsername(usuario.username());
 
-        return this.usuarioRepository.save(usuarioAtualizado);
+        Usuario response = this.usuarioRepository.save(usuarioAtualizado);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public ResponseEntity<HttpStatus> updateSenha(String usuarioId, ChangePasswordDto data) {
+        Optional<Usuario> response = this.usuarioRepository.findById(usuarioId);
+
+        if (!response.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Usuario usuario = response.get();
+
+        if (!passwordEncoder.matches(data.senhaAtual(), usuario.getPassword())) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+        usuario.setSenha(passwordEncoder.encode(data.novaSenha()));
+
+        usuarioRepository.save(usuario);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

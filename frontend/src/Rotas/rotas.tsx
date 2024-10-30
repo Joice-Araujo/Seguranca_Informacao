@@ -5,6 +5,7 @@ import { Perfil } from "../Pages/perfil";
 import { CriarBlog } from "../Pages/blog";
 import { PrivateRoute } from "./private-routes";
 import MyPosts from "../Pages/MyPost";
+import { Senha } from "../Pages/senha";
 
 
 export const Rotas = () => {
@@ -15,6 +16,7 @@ export const Rotas = () => {
       <Route path="/perfil" element={<PrivateRoute page={<Perfil />} />} />
       <Route path="/create-post" element={<PrivateRoute page={<CriarBlog />} />} />
       <Route path="/my-posts" element={<PrivateRoute page={<MyPosts />} />} />
+      <Route path="/senha" element={<PrivateRoute page={<Senha />} />} />
     </Routes>
   );
 };
