@@ -1,79 +1,65 @@
 package com.seguranca_info.demo.services;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.seguranca_info.demo.dto.AssinantesTermosDeUsoDto;
 import com.seguranca_info.demo.dto.TermosDeUsoDto;
 import com.seguranca_info.demo.models.TermosDeUso;
-import com.seguranca_info.demo.models.Usuario;
 import com.seguranca_info.demo.repository.TermosDeUsoRepository;
-import com.seguranca_info.demo.repository.UsuarioRepository;
 
 @Service
 public class TermosDeUsoService {
     @Autowired
     private TermosDeUsoRepository repository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    public TermosDeUso createTermosDeUso(TermosDeUsoDto termosDeUso) throws NotFoundException {
-
-        Optional<Usuario> response = usuarioRepository.findByUsername(termosDeUso.username());
-
-        if (!response.isPresent()){
-            throw new NotFoundException();
-        }
-
-        Usuario user = response.get();
-
-        TermosDeUso termos = new TermosDeUso();
-
-        termos.setIdUser(user.getId());
-        termos.setTermosDeUso(termosDeUso.termosDeUso());
-
-        return repository.save(termos);
-    }
+    public ResponseEntity<TermosDeUso> create(TermosDeUsoDto termosDeUsoDto){
+        try {            
+            Optional<TermosDeUso> response = repository.findByActual(true);
     
-    public TermosDeUso getTermosDeUso(String username) throws NotFoundException {
-        Optional<Usuario> response = usuarioRepository.findByUsername(username);
+            if (response.isPresent()) {
+                TermosDeUso antigoAtual = response.get();
+                antigoAtual.setActual(false);
+                repository.save(antigoAtual);
+            }
+    
+            TermosDeUso termosDeUso = new TermosDeUso();
+            ZonedDateTime dataHoraBrasil = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
-        if (!response.isPresent()){
-            throw new NotFoundException();
+    
+            termosDeUso.setVersao(termosDeUsoDto.versao());
+            termosDeUso.setDescricao(termosDeUsoDto.descricao());
+            termosDeUso.setOpcoes(termosDeUsoDto.opcoes());
+            termosDeUso.setActual(true);
+            termosDeUso.setCreatedAt(dataHoraBrasil.toInstant());
+    
+            TermosDeUso termoSalvo = repository.save(termosDeUso);
+    
+            return new ResponseEntity<TermosDeUso>(termoSalvo, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        Usuario user = response.get();
-
-        return repository.findByIdUser(user.getId()).orElseThrow();
     }
 
-    public TermosDeUso updateTermosDeUso(String id,TermosDeUsoDto termosDeUso) throws NotFoundException{
-        Optional <TermosDeUso> response = this.repository.findById(id);
-
-        if (!response.isPresent()){
-            throw new NotFoundException();
+    public ResponseEntity<HttpStatus> adicionarAssinante(AssinantesTermosDeUsoDto dto){
+        Optional<TermosDeUso> response = repository.findByActual(true);
+        if (!response.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        TermosDeUso termosDeUso = response.get();
+        ZonedDateTime dataHoraBrasil = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
-        TermosDeUso termos2 = response.get();
+        AssinantesTermosDeUsoDto assinante = new AssinantesTermosDeUsoDto(dto.idUsuario(), dto.opcoes(),dataHoraBrasil.toInstant());
+        termosDeUso.addAssinante(assinante);
+        
+        repository.save(termosDeUso);
 
-        termos2.setTermosDeUso(termosDeUso.termosDeUso());
-
-        return repository.save(termos2);
-    }
-
-    public void deleteTermosDeUso(String id) throws NotFoundException {
-        Optional <TermosDeUso> response = this.repository.findById(id);
-
-        if (!response.isPresent()){
-            throw new NotFoundException();
-        }
-
-        TermosDeUso termos3 = response.get();
-
-        this.repository.delete(termos3);
-
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
