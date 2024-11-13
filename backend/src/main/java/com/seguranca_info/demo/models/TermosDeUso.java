@@ -4,10 +4,12 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.seguranca_info.demo.dto.AssinantesTermosDeUso;
 import com.seguranca_info.demo.dto.AssinantesTermosDeUsoDto;
 import com.seguranca_info.demo.dto.OpcaoTermosDeUsoDto;
 
@@ -34,12 +36,11 @@ public class TermosDeUso {
 
     private List<OpcaoTermosDeUsoDto> opcoes;
 
-    private List<AssinantesTermosDeUsoDto> assinantes = new ArrayList<AssinantesTermosDeUsoDto>();
+    public List<AssinantesTermosDeUso> assinantes = new ArrayList<AssinantesTermosDeUso>();
 
     private Instant createdAt;
 
-    public void addAssinante(AssinantesTermosDeUsoDto assinantesTermosDeUsoDto){
-        this.assinantes.add(assinantesTermosDeUsoDto);
+    public void addAssinante(AssinantesTermosDeUso assinantesTermosDeUso){
+        this.assinantes.add(assinantesTermosDeUso);
     }
-
 }

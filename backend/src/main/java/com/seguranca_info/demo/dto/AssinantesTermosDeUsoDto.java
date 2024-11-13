@@ -6,7 +6,6 @@ import java.util.List;
 
 public record AssinantesTermosDeUsoDto (
     String idUsuario,
-    List<OpcaoTermosDeUsoDto> opcoes,
-    Instant createdAt
-    )  
+    List<OpcaoTermosDeUsoDto> opcoes
+        )  
 {}
