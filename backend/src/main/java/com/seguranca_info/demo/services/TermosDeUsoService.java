@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.seguranca_info.demo.dto.AssinantesTermosDeUso;
 import com.seguranca_info.demo.dto.AssinantesTermosDeUsoDto;
+import com.seguranca_info.demo.dto.OpcaoTermosDeUsoDto;
 import com.seguranca_info.demo.dto.TermosDeUsoDto;
 import com.seguranca_info.demo.models.TermosDeUso;
 import com.seguranca_info.demo.repository.TermosDeUsoRepository;
@@ -35,10 +36,15 @@ public class TermosDeUsoService {
             TermosDeUso termosDeUso = new TermosDeUso();
             ZonedDateTime dataHoraBrasil = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
+            List<OpcaoTermosDeUsoDto> opcoes = termosDeUsoDto.opcoes();
+
+            opcoes.forEach(op -> {
+                op.setAceito(false);
+            });
     
             termosDeUso.setVersao(termosDeUsoDto.versao());
             termosDeUso.setDescricao(termosDeUsoDto.descricao());
-            termosDeUso.setOpcoes(termosDeUsoDto.opcoes());
+            termosDeUso.setOpcoes(opcoes);
             termosDeUso.setActual(true);
             termosDeUso.setCreatedAt(dataHoraBrasil.toInstant());
     
@@ -69,7 +75,7 @@ public class TermosDeUsoService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public TermosDeUso getActualTermoDeUso(){
+    public TermosDeUsoDto getActualTermoDeUso(){
         Optional<TermosDeUso> response = repository.findByActual(true);
         if (!response.isPresent()) {
             return null;
@@ -77,13 +83,17 @@ public class TermosDeUsoService {
 
         TermosDeUso termo = response.get();
 
-        return termo;
+        return new TermosDeUsoDto(termo.getVersao(),termo.getDescricao(),termo.getOpcoes());
     }
 
     public Boolean userIsRegistered( String userId ){
-        TermosDeUso termo = getActualTermoDeUso();
+        Optional<TermosDeUso> response = repository.findByActual(true);
 
-        for (AssinantesTermosDeUso assinantes : termo.getAssinantes()) {
+        if (!response.isPresent()) {
+            return false;
+        }
+
+        for (AssinantesTermosDeUso assinantes : response.get().getAssinantes()) {
             if (assinantes.getIdUsuario().equals(userId)) {
                 return true;
             }
@@ -92,13 +102,14 @@ public class TermosDeUsoService {
     }
 
     public AssinantesTermosDeUso getTermosAssinados(String userId) {
-        TermosDeUso termo = getActualTermoDeUso();
+        Optional<TermosDeUso> response = repository.findByActual(true);
 
-        if (termo == null) {
+
+        if (!response.isPresent()) {
             return null;
         }
 
-        Optional<AssinantesTermosDeUso> assinante = termo.getAssinantes().stream().filter(ass -> ass.getIdUsuario().equals(userId)).reduce((primeiro, segundo) -> segundo);
+        Optional<AssinantesTermosDeUso> assinante = response.get().getAssinantes().stream().filter(ass -> ass.getIdUsuario().equals(userId)).reduce((primeiro, segundo) -> segundo);
 
         if (assinante.isPresent()) {
             return assinante.get();

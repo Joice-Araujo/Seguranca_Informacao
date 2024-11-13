@@ -34,7 +34,7 @@ public class WebSecurityConfigure {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/login/**", "/register", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/login/**", "/register","/termodeuso/add-assinante","/termodeuso/atual", "/termodeuso/assinatura/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(usuarioService)
                 .sessionManagement(session -> session

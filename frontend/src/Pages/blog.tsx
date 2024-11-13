@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Input } from "../Componentes/input";
 import { Btn } from "../Componentes/btn";
 import { blogService } from "../Services/blog-service";
-import { BlogType } from "../Interfaces/CreateBlog";
 import { TextArea } from "../Componentes/textArea";
 import { authService } from "../Services/auth-service";
 import useAuth from "../Hooks/useAuth";
+import { CreateBlog } from "../Interfaces/CreateBlog";
 
 
 
@@ -19,7 +19,7 @@ export function CriarBlog() {
         const username = authService.getRole()
 
         if (username) {
-            const data: BlogType = {
+            const data: CreateBlog = {
                 conteudo: conteudo,
                 titulo: titulo,
                 username: username

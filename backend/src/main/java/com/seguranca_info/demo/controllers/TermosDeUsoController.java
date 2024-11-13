@@ -27,7 +27,6 @@ public class TermosDeUsoController {
 
     @PostMapping("/create-termo")
     public ResponseEntity<TermosDeUso> createTermo(@RequestBody TermosDeUsoDto dto){
-        System.out.println(dto.descricao());
         ResponseEntity<TermosDeUso> response = service.create(dto);
         return response;
     }
@@ -39,12 +38,12 @@ public class TermosDeUsoController {
     }
 
     @GetMapping("/atual")
-    public ResponseEntity<TermosDeUso> getTermoAtual(){
-        TermosDeUso termo = service.getActualTermoDeUso();
+    public ResponseEntity<TermosDeUsoDto> getTermoAtual(){
+        TermosDeUsoDto termo = service.getActualTermoDeUso();
         if (termo == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<TermosDeUso>(termo, HttpStatus.OK);
+        return new ResponseEntity<TermosDeUsoDto>(termo, HttpStatus.OK);
     }
 
     @GetMapping("/assinatura/{idUser}")
