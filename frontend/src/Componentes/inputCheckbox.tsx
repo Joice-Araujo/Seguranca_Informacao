@@ -10,7 +10,7 @@ interface InputProps {
 export function Check(props: InputProps) {
 
     const handleCheckBox = () => {
-        props.value == true ? props.setValue(false) : props.setValue(true)
+        props.setValue()
     }
 
     return (

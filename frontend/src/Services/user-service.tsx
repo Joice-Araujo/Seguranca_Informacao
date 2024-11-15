@@ -1,4 +1,3 @@
-import { LoginType } from "../Interfaces/ILogin";
 import { ISign } from "../Interfaces/ISign";
 import api from "./api";
 import { authService } from "./auth-service";
@@ -17,8 +16,8 @@ export const userService = {
         })
     },
      
-    update: async (usuarioAtualizado: { username: string; email: string }) => {
-        return await api.put(`usuario/${authService.getRole()}`, usuarioAtualizado, {
+    update: async (userId: string,usuarioAtualizado: { username: string; email: string }) => {
+        return await api.put(`usuario/${userId}`, usuarioAtualizado, {
             headers: { Authorization: `Bearer ${authService.getToken()}` }
         })
     },
