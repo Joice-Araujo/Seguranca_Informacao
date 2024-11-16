@@ -2,19 +2,23 @@ import { useEffect, useState } from "react";
 import { Input } from "../Componentes/input";
 import { Btn } from "../Componentes/btn";
 import { userService } from "../Services/user-service";
-import useAuth from "../Hooks/useAuth";
 import { termoDeUsoService } from "../Services/termodeuso-service";
-import { OpcaoTermosDeUsoDto } from "../Interfaces/TermoDeUso";
-import _, { set } from "lodash";
-
+import { OpcaoTermosDeUsoDto, TermosDeUsoDto } from "../Interfaces/TermoDeUso";
+import _ from "lodash";
 
 export function Perfil() {
-  const [userId, setUserId] = useState("")
+  const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [termoDeUso, setTermoDeUso] = useState<OpcaoTermosDeUsoDto[]>([]);
   const [editar, setEditar] = useState(false);
-
+  const [termoDeUsoObrigatorio, setTermoDeUsoObrigatorio] = useState<TermosDeUsoDto>({
+    descricao: "",
+    opcoes: [],
+    versao: "",
+    assinado: true
+  });
+  const [termoAssinado, setTermoAssinado] = useState<boolean>(true);
 
   interface Usuario {
     id: string;
@@ -23,20 +27,27 @@ export function Perfil() {
   }
 
   const perfilUsuario = async () => {
-    try {
-      const resposta = await userService.getUsuarioByUsername();
-      const perfil: Usuario = await resposta.data;
-      const termo = await termoDeUsoService.getTermoAssinado(perfil.id);
-      setUserId(perfil.id)
-      localStorage.setItem("termo", termo.data.opcoes);
-      localStorage.setItem("username", perfil.username)
-      localStorage.setItem("email", perfil.email)
-      setTermoDeUso(termo.data.opcoes);
-      setUsername(perfil.username);
-      setUserEmail(perfil.email);
-    } catch (error) {
-      console.error("Erro ao buscar os dados do usuário:", error);
-    }
+    const resposta = await userService.getUsuarioByUsername();
+    const perfil: Usuario = await resposta.data;
+
+    setUserId(perfil.id);
+    localStorage.setItem("username", perfil.username);
+    localStorage.setItem("email", perfil.email);
+    setUserEmail(perfil.email);
+    setUsername(perfil.username);
+
+    await termoDeUsoService
+      .getTermoAssinado(perfil.id)
+      .then((resp) => {
+        localStorage.setItem("termo", resp.data.opcoes);
+        setTermoDeUso(resp.data.opcoes);
+      })
+      .catch(async () => {
+        setTermoAssinado(false);
+        const termoAtual = (await termoDeUsoService.getActual()).data;
+        setTermoDeUsoObrigatorio({...termoAtual, assinado: false});
+        setTermoDeUso(termoAtual.opcoes);
+      });
   };
 
   const handleOpcao = (index: number) => {
@@ -52,7 +63,7 @@ export function Perfil() {
         email: userEmail,
       };
 
-      await userService.update(userId,usuarioAtualizado);
+      await userService.update(userId, usuarioAtualizado);
 
       alert("Usuário atualizado com sucesso!");
       setEditar(false);
@@ -64,21 +75,30 @@ export function Perfil() {
 
   const atualizarUsuario = async () => {
     if (!editar) {
-        setEditar(!editar)
+      setEditar(!editar);
     } else {
-        if (!_.isEqual(userEmail, localStorage.getItem("email")) || !_.isEqual(username, localStorage.getItem("username"))) {
-          salvarAlteracao();
-        }
-    
-        if (!_.isEqual(termoDeUso, localStorage.getItem("termo"))) {
-            const data = {idUsuario: userId,opcoes: termoDeUso}
-            console.log(data)
-            await termoDeUsoService.assinarTermo(data).then(resp => {
-                if (resp.status == 200) {
-                    alert("Termo de uso atualizado")
-                }
-            })
-        }
+      if (
+        !_.isEqual(userEmail, localStorage.getItem("email")) ||
+        !_.isEqual(username, localStorage.getItem("username"))
+      ) {
+        salvarAlteracao();
+      }
+
+      if (termoDeUsoObrigatorio.assinado) {
+          if (!_.isEqual(termoDeUso, localStorage.getItem("termo"))) {
+            const data = { idUsuario: userId, opcoes: termoDeUso };
+            console.log(data);
+            await termoDeUsoService.assinarTermo(data).then((resp) => {
+              if (resp.status == 200) {
+                alert("Termo de uso atualizado");
+              }
+            });
+            setTermoAssinado(true)
+          }
+      } else {
+        alert("Termo de uso obrigatório não está assinado")
+      }
+
     }
   };
 
@@ -119,27 +139,46 @@ export function Perfil() {
           </div>
 
           <div>
-            {
-                termoDeUso.map((termo, index) => {
-                  return (
-                    <div className="flex flex-row space-x-2">
-                      <div>
-                        <input
-                          type={"checkbox"}
-                          onChange={() => {
-                            handleOpcao(index);
-                          }}
-                          checked={termo.aceito}
-                        />
-                      </div>
+            {!termoAssinado && (
+              <>
+                <p className="text text-red-600">
+                  *Termo de uso obrigatório não assinado
+                </p>
 
-                      <div>
-                        <label>{termo.descricao}</label>
-                      </div>
-                    </div>
-                  );
-                })
-            }
+                <div className="flex flex-row space-x-2">
+                  <div>
+                    <input type={"checkbox"} checked={termoDeUsoObrigatorio?.assinado} onChange={() => {
+                        if (termoDeUsoObrigatorio?.assinado != null) {
+                            setTermoDeUsoObrigatorio({...termoDeUsoObrigatorio, assinado: !termoDeUsoObrigatorio.assinado})
+                        }
+                    }}/>
+                  </div>
+
+                  <div>
+                    <label>{termoDeUsoObrigatorio?.descricao}</label>
+                  </div>
+                </div>
+              </>
+            )}
+            {termoDeUso.map((termo, index) => {
+              return (
+                <div className="flex flex-row space-x-2">
+                  <div>
+                    <input
+                      type={"checkbox"}
+                      onChange={() => {
+                        handleOpcao(index);
+                      }}
+                      checked={termo.aceito}
+                    />
+                  </div>
+
+                  <div>
+                    <label>{termo.descricao}</label>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           <div className="flex mt-3 justify-around items-center ">

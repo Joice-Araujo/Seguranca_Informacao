@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { authService } from "../Services/auth-service";
 import useAuth from "../Hooks/useAuth";
-import { FaUser, FaPlus, FaList, FaSignOutAlt } from "react-icons/fa"; 
+import { FaUser, FaPlus, FaList, FaSignOutAlt } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
-
+import { FaRegCircleCheck } from "react-icons/fa6";
 
 export function SideBar() {
   const navigate = useNavigate();
@@ -17,14 +17,16 @@ export function SideBar() {
   const myPosts = () => {
     navigate("/my-posts"); // Navega para a página de visualização dos posts
   };
+  const termos = () => {
+    navigate("/termos"); // Navega para a página de visualização dos posts
+  };
   const senha = () => {
     navigate("/senha"); // Navega para a página de visualização dos posts
   };
 
-  const auth = useAuth()
+  const auth = useAuth();
 
   return (
-
     <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 h-[calc(100vh-0.1rem)] w-full max-w-[20rem] border p-4 shadow-xl shadow-blue-gray-900/5">
       <div className="mb-2 p-4">
         <h5 className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-gray-900">
@@ -39,9 +41,7 @@ export function SideBar() {
           onClick={post}
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
-          <div className="grid place-items-center mr-4">
-            
-          </div>
+          <div className="grid place-items-center mr-4"></div>
           <FaPlus className="mr-4" />
           Criar Postagem
         </div>
@@ -52,11 +52,20 @@ export function SideBar() {
           onClick={myPosts}
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
-          <div className="grid place-items-center mr-4">
-            
-          </div>
+          <div className="grid place-items-center mr-4"></div>
           <FaList className="mr-4" />
           Minhas Postagens
+        </div>
+
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={termos}
+          className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-gray-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
+        >
+          <div className="grid place-items-center mr-4"></div>
+          <FaRegCircleCheck className="mr-4" />
+          Termos de Uso
         </div>
 
         {/* Button 2 */}
@@ -66,24 +75,19 @@ export function SideBar() {
           onClick={perfil}
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
-            <div className="grid place-items-center mr-4">
-              
-            </div>
-            <FaUser className="mr-4" />
-            Perfil
+          <div className="grid place-items-center mr-4"></div>
+          <FaUser className="mr-4" />
+          Perfil
         </div>
 
-
         {/* Button 4  */}
-         <div
+        <div
           role="button"
           tabIndex={0}
           onClick={senha}
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
-          <div className="grid place-items-center mr-4">
-            
-          </div>
+          <div className="grid place-items-center mr-4"></div>
           <RiLockPasswordFill className="mr-4 w-5 h-5" />
           Atulize Senha
         </div>
@@ -95,15 +99,11 @@ export function SideBar() {
           onClick={() => auth?.logout()}
           className="flex items-center w-full p-3 rounded-lg text-start leading-tight transition-all hover:bg-blue-50 hover:bg-opacity-80 focus:bg-blue-50 focus:bg-opacity-80 active:bg-blue-50 active:bg-opacity-80 hover:text-blue-900 focus:text-blue-900 active:text-blue-900 outline-none"
         >
-          <div className="grid place-items-center mr-4">
-            
-          </div>
+          <div className="grid place-items-center mr-4"></div>
           <FaSignOutAlt className="mr-4" />
           Sair
         </div>
-        
-
       </nav>
     </div>
-  )
+  );
 }
