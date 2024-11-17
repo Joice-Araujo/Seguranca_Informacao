@@ -37,11 +37,7 @@ public class UserSecurityService {
         if (user == null) {
             return false;
         }
-
-        user.setPrivateKey(null);
-        user.setKeySize(null);
-        user.setAlgoritmo(null);
-        repository.save(user);
+        repository.delete(user);
         
         return true;
     }

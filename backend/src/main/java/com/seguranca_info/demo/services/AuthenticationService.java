@@ -17,6 +17,7 @@ import com.seguranca_info.demo.helpers.Criptografia;
 import com.seguranca_info.demo.dto.UserDto;
 import com.seguranca_info.demo.repository.UsuarioRepository;
 import com.seguranca_info.demo.models.AuthenticationResponse;
+import com.seguranca_info.demo.models.UserSecurity;
 import com.seguranca_info.demo.models.Usuario;
 
 @Service
@@ -72,10 +73,16 @@ public class AuthenticationService {
 
         Optional<Usuario> user = userRepository.findByUsername(dto.username());
 
+        
         if (!user.isPresent()) {
-            System.out.println("Usuario nao encontrado");
             return null;
         } else {
+            UserSecurity userSecurity = userSecurityService.getUserSecurity(user.get().getId());
+
+            if (userSecurity == null) {
+                return null;
+            }
+
             String token = jwtService.generateToken(user.get());
 
             return new AuthenticationResponse(token);

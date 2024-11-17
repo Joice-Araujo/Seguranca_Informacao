@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.seguranca_info.demo.models.Usuario;
 import com.seguranca_info.demo.services.UsuarioService;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -64,5 +65,10 @@ public class UsuarioController {
     @PutMapping("change-password/{id}")
     public ResponseEntity<HttpStatus> changePassoword(@PathVariable String id, @RequestBody ChangePasswordDto data) {
         return service.updateSenha(id, data);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable String id) throws Exception{
+        return service.deleteUser(id);
     }
 }

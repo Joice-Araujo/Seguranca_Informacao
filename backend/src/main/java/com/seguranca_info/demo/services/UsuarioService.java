@@ -21,8 +21,6 @@ import com.seguranca_info.demo.models.UserSecurity;
 import com.seguranca_info.demo.models.Usuario;
 import com.seguranca_info.demo.repository.UsuarioRepository;
 
-import io.jsonwebtoken.Jwts;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
@@ -71,30 +69,33 @@ public class UsuarioService {
     }
 
     public Usuario getUsuarioByUsername(String username) throws Exception {
-        
-        Optional<Usuario> response = this.usuarioRepository.findByUsername(username);
-        
-        if (!response.isPresent()) {
-            System.out.println("Usuario não encontrado");
+
+        try {
+            Optional<Usuario> response = this.usuarioRepository.findByUsername(username);
+
+            if (!response.isPresent()) {
+                System.out.println("Usuario não encontrado");
+                return null;
+            }
+
+            Usuario user = response.get();
+
+            UserSecurity userSecurity = userSecurityService.getUserSecurity(user.getId());
+
+            PrivateKey privateKey = Criptografia.Base64ToPrivateKey(userSecurity.getPrivateKey());
+
+            byte[] bytesEmail = Base64.getDecoder().decode(user.getEmail());
+
+            String email = criptografia.descriptografar(bytesEmail, privateKey,
+                    criptografia.getAlgoritmo());
+
+            user.setEmail(email);
+
+            return user;
+
+        } catch (Exception e) {
             return null;
         }
-
-        Usuario user = response.get();
-
-        UserSecurity userSecurity = userSecurityService.getUserSecurity(user.getId());
-
-        
-        PrivateKey privateKey = Criptografia.Base64ToPrivateKey(userSecurity.getPrivateKey());
-        
-        byte[] bytesEmail = Base64.getDecoder().decode(user.getEmail());
-
-        String email = criptografia.descriptografar(bytesEmail, privateKey,
-        criptografia.getAlgoritmo());
-        
-
-        user.setEmail(email);
-
-        return user;
     }
 
     public ResponseEntity<UserWithToken> update(String usuarioId, UserDto usuario) throws Exception {
@@ -142,5 +143,18 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<HttpStatus> deleteUser(String id) throws Exception {
+        try {
+            Usuario user = this.getById(id);
+
+            this.usuarioRepository.delete(user);
+            this.userSecurityService.deletePrivateKey(id);
+            return new ResponseEntity<HttpStatus>(HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
+        }
     }
 }

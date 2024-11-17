@@ -28,4 +28,9 @@ export const userService = {
         })
     },
 
+    excluirConta: async (id: string)=> {
+        return await api.delete(`usuario/${id}`, {
+            headers: {Authorization: `Bearer ${authService.getToken()}`}
+        })
+    }
 }

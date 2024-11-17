@@ -33,13 +33,13 @@ export function AuthProvider({ children }: any) {
                         }
                     }
                     break;
-
-                case 401:
-                    setToken(null)
-                    throw new Error("Login ou senha inválidos")
                 default:
-                    throw new Error("Erro na validação do usuário")
+                    alert("Erro na validação do usuário")
             }
+        }).catch(err => {
+            console.log(err)
+            setToken(null)
+            alert("Login ou senha inválidos")
         })
     }
 

@@ -6,6 +6,8 @@ import { termoDeUsoService } from "../Services/termodeuso-service";
 import { OpcaoTermosDeUsoDto, TermosDeUsoDto } from "../Interfaces/TermoDeUso";
 import _ from "lodash";
 import { authService } from "../Services/auth-service";
+import useAuth from "../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export function Perfil() {
   const [userId, setUserId] = useState("");
@@ -20,6 +22,8 @@ export function Perfil() {
     assinado: true
   });
   const [termoAssinado, setTermoAssinado] = useState<boolean>(true);
+  const auth = useAuth()
+  const nav = useNavigate()
 
   interface Usuario {
     id: string;
@@ -101,9 +105,25 @@ export function Perfil() {
       } else {
         alert("Termo de uso obrigatório não está assinado")
       }
-
     }
   };
+
+  const deletarConta = async () => {
+    const confirmacao = confirm("Tem certeza que deseja deletar a sua conta?")
+    if (confirmacao) {
+      userService.excluirConta(userId).then(resp => {
+        if (resp.status == 200) {
+          alert("Conta Deletada com sucesso")
+          authService.removeToken();
+          auth?.logout();
+          nav("/")
+        }
+      }).catch(err => {
+        alert("Ocorreu um erro ao apagar a sua conta")
+        console.error(err)
+      });
+    }
+  }
 
   useEffect(() => {
     perfilUsuario();
@@ -190,7 +210,7 @@ export function Perfil() {
               onClick={atualizarUsuario}
               btnClassName="btnLogin"
             />
-            {/* <Btn label="Editar" onClick={editarUsuario} btnClassName="btnLogin" /> */}
+            <Btn label="Apagar" onClick={deletarConta} btnClassName="btnExcluir" />
           </div>
         </div>
       </div>
