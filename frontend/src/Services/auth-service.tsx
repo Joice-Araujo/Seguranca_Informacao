@@ -1,19 +1,19 @@
-import { jwtDecode, JwtPayload} from "jwt-decode"
+import { jwtDecode, JwtPayload } from "jwt-decode"
 import { LoginType } from "../Interfaces/ILogin"
 import api from "./api"
 
 const token = "blog"
 
 export const authService = {
-    async authenticateUser(data : LoginType){
-       return await api.post("/login", data)
+    async authenticateUser(data: LoginType) {
+        return await api.post("/login", data)
     },
 
-    setToken (data : any) {
+    setToken(data: any) {
         localStorage.setItem(token, data);
     },
 
-    getToken(){
+    getToken() {
         return localStorage.getItem(token)
     },
 
@@ -21,7 +21,7 @@ export const authService = {
         localStorage.removeItem(token)
     },
 
-    decodeToken(token : string | null | undefined){
+    decodeToken(token: string | null | undefined) {
         if (token) {
             const decode = jwtDecode(token)
             return decode

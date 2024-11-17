@@ -5,6 +5,7 @@ import { userService } from "../Services/user-service";
 import { termoDeUsoService } from "../Services/termodeuso-service";
 import { OpcaoTermosDeUsoDto, TermosDeUsoDto } from "../Interfaces/TermoDeUso";
 import _ from "lodash";
+import { authService } from "../Services/auth-service";
 
 export function Perfil() {
   const [userId, setUserId] = useState("");
@@ -45,7 +46,7 @@ export function Perfil() {
       .catch(async () => {
         setTermoAssinado(false);
         const termoAtual = (await termoDeUsoService.getActual()).data;
-        setTermoDeUsoObrigatorio({...termoAtual, assinado: false});
+        setTermoDeUsoObrigatorio({ ...termoAtual, assinado: false });
         setTermoDeUso(termoAtual.opcoes);
       });
   };
@@ -63,7 +64,9 @@ export function Perfil() {
         email: userEmail,
       };
 
-      await userService.update(userId, usuarioAtualizado);
+      await userService.update(userId, usuarioAtualizado).then(resp => {
+        authService.setToken(resp.data.token)
+      });
 
       alert("Usuário atualizado com sucesso!");
       setEditar(false);
@@ -85,16 +88,16 @@ export function Perfil() {
       }
 
       if (termoDeUsoObrigatorio.assinado) {
-          if (!_.isEqual(termoDeUso, localStorage.getItem("termo"))) {
-            const data = { idUsuario: userId, opcoes: termoDeUso };
-            console.log(data);
-            await termoDeUsoService.assinarTermo(data).then((resp) => {
-              if (resp.status == 200) {
-                alert("Termo de uso atualizado");
-              }
-            });
-            setTermoAssinado(true)
-          }
+        if (!_.isEqual(termoDeUso, localStorage.getItem("termo"))) {
+          const data = { idUsuario: userId, opcoes: termoDeUso };
+          console.log(data);
+          await termoDeUsoService.assinarTermo(data).then((resp) => {
+            if (resp.status == 200) {
+              alert("Termo de uso atualizado");
+            }
+          });
+          setTermoAssinado(true)
+        }
       } else {
         alert("Termo de uso obrigatório não está assinado")
       }
@@ -121,7 +124,7 @@ export function Perfil() {
               disabled={!editar}
               labelClassName="labelLogin"
               inputClassName="inputLogin"
-              //onChange={(e) => setUsername(e.target.value)}
+            //onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
@@ -134,7 +137,7 @@ export function Perfil() {
               disabled={!editar}
               labelClassName="labelLogin "
               inputClassName="inputLogin"
-              //onChange={(e) => setUserEmail(e.target.value)}
+            //onChange={(e) => setUserEmail(e.target.value)}
             />
           </div>
 
@@ -148,10 +151,10 @@ export function Perfil() {
                 <div className="flex flex-row space-x-2">
                   <div>
                     <input type={"checkbox"} checked={termoDeUsoObrigatorio?.assinado} onChange={() => {
-                        if (termoDeUsoObrigatorio?.assinado != null) {
-                            setTermoDeUsoObrigatorio({...termoDeUsoObrigatorio, assinado: !termoDeUsoObrigatorio.assinado})
-                        }
-                    }}/>
+                      if (termoDeUsoObrigatorio?.assinado != null) {
+                        setTermoDeUsoObrigatorio({ ...termoDeUsoObrigatorio, assinado: !termoDeUsoObrigatorio.assinado })
+                      }
+                    }} />
                   </div>
 
                   <div>

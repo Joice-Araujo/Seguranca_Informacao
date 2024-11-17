@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.seguranca_info.demo.dto.ChangePasswordDto;
 import com.seguranca_info.demo.dto.UserDto;
+import com.seguranca_info.demo.dto.UserWithToken;
 
 @RequestMapping("usuario")
 @RestController
@@ -55,7 +56,7 @@ public class UsuarioController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Usuario> updateUsuario(@RequestBody UserDto usuario, @PathVariable("id") String id)
+    public ResponseEntity<UserWithToken> updateUsuario(@RequestBody UserDto usuario, @PathVariable("id") String id)
             throws Exception {
         return this.service.update(id, usuario);
     }

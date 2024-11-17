@@ -1,16 +1,13 @@
 package com.seguranca_info.demo.models;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.seguranca_info.demo.dto.AssinantesTermosDeUso;
-import com.seguranca_info.demo.dto.AssinantesTermosDeUsoDto;
 import com.seguranca_info.demo.dto.OpcaoTermosDeUsoDto;
 
 
@@ -23,7 +20,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Document
+@Document()
 public class TermosDeUso {
     @Id
     private String id;

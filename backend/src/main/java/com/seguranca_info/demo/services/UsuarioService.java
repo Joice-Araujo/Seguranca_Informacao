@@ -1,5 +1,8 @@
 package com.seguranca_info.demo.services;
 
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +15,14 @@ import org.springframework.stereotype.Service;
 
 import com.seguranca_info.demo.dto.ChangePasswordDto;
 import com.seguranca_info.demo.dto.UserDto;
-
+import com.seguranca_info.demo.dto.UserWithToken;
+import com.seguranca_info.demo.helpers.Criptografia;
+import com.seguranca_info.demo.models.UserSecurity;
 import com.seguranca_info.demo.models.Usuario;
 import com.seguranca_info.demo.repository.UsuarioRepository;
+
+import io.jsonwebtoken.Jwts;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
@@ -23,7 +31,16 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private UserSecurityService userSecurityService;
+
+    @Autowired
+    private Criptografia criptografia;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     public List<Usuario> getAll() {
         return this.usuarioRepository.findAll().stream().sorted(Comparator.comparing(user -> user.getCreatedAt()))
@@ -36,28 +53,75 @@ public class UsuarioService {
         if (!resp.isPresent()) {
             throw new Exception("Usuário não existe!");
         } else {
-            return resp.get();
+            Usuario user = resp.get();
+
+            UserSecurity userSecurity = userSecurityService.getUserSecurity(user.getId());
+
+            PrivateKey privateKey = Criptografia.Base64ToPrivateKey(userSecurity.getPrivateKey());
+
+            byte[] bytesEmail = Base64.getDecoder().decode(user.getEmail());
+
+            String email = criptografia.descriptografar(bytesEmail, privateKey,
+                    criptografia.getAlgoritmo());
+
+            user.setEmail(email);
+
+            return user;
         }
     }
 
-    public Usuario getUsuarioByUsername(String username) {
-        return this.usuarioRepository.findByUsername(username).orElseThrow();
+    public Usuario getUsuarioByUsername(String username) throws Exception {
+        
+        Optional<Usuario> response = this.usuarioRepository.findByUsername(username);
+        
+        if (!response.isPresent()) {
+            System.out.println("Usuario não encontrado");
+            return null;
+        }
+
+        Usuario user = response.get();
+
+        UserSecurity userSecurity = userSecurityService.getUserSecurity(user.getId());
+
+        
+        PrivateKey privateKey = Criptografia.Base64ToPrivateKey(userSecurity.getPrivateKey());
+        
+        byte[] bytesEmail = Base64.getDecoder().decode(user.getEmail());
+
+        String email = criptografia.descriptografar(bytesEmail, privateKey,
+        criptografia.getAlgoritmo());
+        
+
+        user.setEmail(email);
+
+        return user;
     }
 
-    public ResponseEntity<Usuario> update(String usuarioId, UserDto usuario) throws Exception {
+    public ResponseEntity<UserWithToken> update(String usuarioId, UserDto usuario) throws Exception {
         Optional<Usuario> userExist = this.usuarioRepository.findByUsername(usuario.username());
 
-        if (userExist.isPresent()) {
+        if (userExist.isPresent() && userExist.get().getId() != usuarioId) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
         Usuario usuarioAtualizado = this.getById(usuarioId);
-        usuarioAtualizado.setEmail(usuario.email());
+
+        KeyPair chaves = criptografia.gerarChave();
+
+        byte[] emailCriptografado = criptografia.criptografar(usuarioAtualizado.getEmail(), chaves.getPublic());
+
+        usuarioAtualizado.setEmail(Base64.getEncoder().encodeToString(emailCriptografado));
+
         usuarioAtualizado.setUsername(usuario.username());
 
         Usuario response = this.usuarioRepository.save(usuarioAtualizado);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        userSecurityService.updatePrivateKey(usuarioId, chaves.getPrivate(), criptografia.getAlgoritmo(),
+                criptografia.getKeySize());
+
+        String token = this.jwtService.generateToken(response);
+
+        return new ResponseEntity<>(new UserWithToken(response, token), HttpStatus.OK);
     }
 
     public ResponseEntity<HttpStatus> updateSenha(String usuarioId, ChangePasswordDto data) {

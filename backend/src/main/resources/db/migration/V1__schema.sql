@@ -1,7 +1,7 @@
 CREATE TABLE user (
     id varchar(36) primary key unique not null,
-    idUser varchar(36) unique not null,
-    privateKey varchar(255) unique,
+    id_user varchar(36) unique not null,
+    private_key text,
     algoritmo varchar(3),
-    keySize int
+    key_size int
 );

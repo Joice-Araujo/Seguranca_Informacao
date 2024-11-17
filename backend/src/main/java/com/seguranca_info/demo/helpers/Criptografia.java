@@ -1,22 +1,30 @@
 package com.seguranca_info.demo.helpers;
 
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
+
+import org.springframework.stereotype.Service;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Service
 public class Criptografia {
     private static String algoritmo = "RSA";
     private static Integer keySize = 1024;
 
-    public static KeyPair gerarChave() {
+    public KeyPair gerarChave() {
         try {
             final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algoritmo);
             keyGen.initialize(keySize);
@@ -29,7 +37,15 @@ public class Criptografia {
         }
     }
 
-    public static byte[] criptografar(String textSemCriptografia, PublicKey chave) {
+    public String getAlgoritmo() {
+        return algoritmo;
+    }
+
+    public Integer getKeySize() {
+        return keySize;
+    }
+
+    public byte[] criptografar(String textSemCriptografia, PublicKey chave) {
         byte[] cipherText = null;
 
         try {
@@ -44,7 +60,7 @@ public class Criptografia {
         return cipherText;
     }
 
-    public static String descriptografar(byte[] textoEncriptado, PrivateKey chave) {
+    public String descriptografar(byte[] textoEncriptado, PrivateKey chave, String algoritmo) {
         byte[] dectypedText = null;
 
         try {
@@ -54,6 +70,14 @@ public class Criptografia {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new String(dectypedText);
+        return new String(dectypedText, StandardCharsets.UTF_8);
+    }
+
+    public static PrivateKey Base64ToPrivateKey(String privateKeyString) throws Exception {
+        byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyString);
+
+        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance(algoritmo);
+        return keyFactory.generatePrivate(privateKeySpec);
     }
 }

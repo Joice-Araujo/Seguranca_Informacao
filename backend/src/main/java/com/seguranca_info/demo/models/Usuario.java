@@ -31,7 +31,6 @@ public class Usuario implements UserDetails{
     @Indexed(unique = true)
     private String username;
 
-    @Indexed(unique = true)
     private String email;
 
     private String senha;

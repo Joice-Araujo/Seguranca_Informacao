@@ -27,11 +27,10 @@ export function AuthProvider({ children }: any) {
                         authService.setToken(respToken)
                         setToken(respToken)
 
-                        const respRole = authService.decodeToken(respToken)?.role
+                        const respRole = authService.decodeToken(respToken)?.sub
                         if (respRole) {
                             setRole(respRole)
                         }
-
                     }
                     break;
 

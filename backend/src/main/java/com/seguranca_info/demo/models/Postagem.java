@@ -16,8 +16,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-@Document
+@Document()
 public class Postagem {
     @Id
     private String id;

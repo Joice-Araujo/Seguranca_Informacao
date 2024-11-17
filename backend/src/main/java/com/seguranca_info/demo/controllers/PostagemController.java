@@ -58,7 +58,7 @@ public class PostagemController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<Postagem>> getPostagemByUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+    public ResponseEntity<List<Postagem>> getPostagemByUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) throws Exception {
         String token = authHeader.substring(7);
         String username = jwtService.extractUsername(token);
 
