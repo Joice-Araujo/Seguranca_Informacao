@@ -29,11 +29,8 @@ public class UserSecurity {
     private String idUser;
 
     @Column(name = "private_key")
-    private String privateKey; // Armazenando como Base64
+    private byte[] privateKey;
 
     @Column(name = "algoritmo", length = 3)
     private String algoritmo;
-
-    @Column(name = "key_size")
-    private Integer keySize;
 }

@@ -6,6 +6,8 @@ import java.security.KeyPair;
 import java.util.Base64;
 import java.util.Optional;
 
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,9 +45,9 @@ public class AuthenticationService {
     public AuthenticationResponse register(UserDto dto) {
         Usuario user = new Usuario(dto);
 
-        KeyPair chaves = criptografiaSevice.gerarChave();
+        SecretKey chaves = criptografiaSevice.gerarChave();
 
-        byte[] dadoCriptografado = criptografiaSevice.criptografar(user.getEmail(), chaves.getPublic());
+        byte[] dadoCriptografado = criptografiaSevice.criptografar(user.getEmail(), chaves);
 
         user.setSenha(passwordEnconder.encode(dto.senha()));
 
@@ -57,9 +59,7 @@ public class AuthenticationService {
 
         userSecurityDto.setAlgotimo(criptografiaSevice.getAlgoritmo());
         userSecurityDto.setIdUser(userSaved.getId());
-        userSecurityDto.setKeySize(criptografiaSevice.getKeySize());
-        userSecurityDto.setPrivateKey(chaves.getPrivate());
-
+        userSecurityDto.setPrivateKey(chaves);
         userSecurityService.createUserSecurity(userSecurityDto);
 
         String token = jwtService.generateToken(user);

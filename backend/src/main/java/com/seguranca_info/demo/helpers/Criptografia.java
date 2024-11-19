@@ -1,19 +1,12 @@
 package com.seguranca_info.demo.helpers;
 
 import java.nio.charset.StandardCharsets;
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.EncodedKeySpec;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Base64;
-
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.stereotype.Service;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,16 +14,12 @@ import lombok.Setter;
 @Setter
 @Service
 public class Criptografia {
-    private static String algoritmo = "RSA";
-    private static Integer keySize = 1024;
+    private static String algoritmo = "AES";
 
-    public KeyPair gerarChave() {
+    public SecretKey gerarChave() {
         try {
-            final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algoritmo);
-            keyGen.initialize(keySize);
-
-            KeyPair key = keyGen.genKeyPair();
-
+            final KeyGenerator keyGen = KeyGenerator.getInstance(algoritmo);
+            SecretKey key = keyGen.generateKey();
             return key;
         } catch (Exception e) {
             throw new Error(e.getMessage());
@@ -41,11 +30,7 @@ public class Criptografia {
         return algoritmo;
     }
 
-    public Integer getKeySize() {
-        return keySize;
-    }
-
-    public byte[] criptografar(String textSemCriptografia, PublicKey chave) {
+    public byte[] criptografar(String textSemCriptografia, SecretKey chave) {
         byte[] cipherText = null;
 
         try {
@@ -60,7 +45,7 @@ public class Criptografia {
         return cipherText;
     }
 
-    public String descriptografar(byte[] textoEncriptado, PrivateKey chave, String algoritmo) {
+    public String descriptografar(byte[] textoEncriptado, SecretKey chave, String algoritmo) {
         byte[] dectypedText = null;
 
         try {
@@ -73,11 +58,8 @@ public class Criptografia {
         return new String(dectypedText, StandardCharsets.UTF_8);
     }
 
-    public static PrivateKey Base64ToPrivateKey(String privateKeyString) throws Exception {
-        byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyString);
-
-        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance(algoritmo);
-        return keyFactory.generatePrivate(privateKeySpec);
+    public static SecretKey BytesToPrivateKey(byte[] privateKey) throws Exception {
+        SecretKey secretKey = new SecretKeySpec(privateKey, algoritmo);
+        return secretKey;
     }
 }

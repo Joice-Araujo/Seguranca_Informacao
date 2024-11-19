@@ -4,6 +4,8 @@ import java.security.PrivateKey;
 import java.util.Base64;
 import java.util.Optional;
 
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,6 @@ public class UserSecurityService {
     private Criptografia criptografia;
 
     public UserSecurity getUserSecurity(String userId) {
-        System.out.println("Teste ");
         Optional<UserSecurity> response = repository.findByIdUser(userId);
 
         if (!response.isPresent()) {
@@ -46,18 +47,16 @@ public class UserSecurityService {
         UserSecurity createdUser = new UserSecurity();
         createdUser.setAlgoritmo(criptografia.getAlgoritmo());
         createdUser.setIdUser(data.getIdUser());
-        createdUser.setKeySize(data.getKeySize());
         byte[] privateKeyBytes =  data.getPrivateKey().getEncoded(); 
-        createdUser.setPrivateKey(Base64.getEncoder().encodeToString(privateKeyBytes));
+        createdUser.setPrivateKey(privateKeyBytes);
         return repository.save(createdUser);
     }
 
-    public UserSecurity updatePrivateKey(String userId, PrivateKey privateKey, String algoritmo, Integer keySize ){
+    public UserSecurity updatePrivateKey(String userId, SecretKey privateKey, String algoritmo){
         UserSecurity updatedUserSecurity = getUserSecurity(userId);
         byte[] privateKeyBytes =  privateKey.getEncoded(); 
-        updatedUserSecurity.setPrivateKey(Base64.getEncoder().encodeToString(privateKeyBytes));
+        updatedUserSecurity.setPrivateKey(privateKeyBytes);
         updatedUserSecurity.setAlgoritmo(algoritmo);
-        updatedUserSecurity.setKeySize(keySize);
         return repository.save(updatedUserSecurity);
     }
 }

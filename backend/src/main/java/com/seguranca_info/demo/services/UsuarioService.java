@@ -1,12 +1,12 @@
 package com.seguranca_info.demo.services;
 
-import java.security.KeyPair;
-import java.security.PrivateKey;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,7 +55,7 @@ public class UsuarioService {
 
             UserSecurity userSecurity = userSecurityService.getUserSecurity(user.getId());
 
-            PrivateKey privateKey = Criptografia.Base64ToPrivateKey(userSecurity.getPrivateKey());
+            SecretKey privateKey = Criptografia.BytesToPrivateKey(userSecurity.getPrivateKey());
 
             byte[] bytesEmail = Base64.getDecoder().decode(user.getEmail());
 
@@ -82,7 +82,7 @@ public class UsuarioService {
 
             UserSecurity userSecurity = userSecurityService.getUserSecurity(user.getId());
 
-            PrivateKey privateKey = Criptografia.Base64ToPrivateKey(userSecurity.getPrivateKey());
+            SecretKey privateKey = Criptografia.BytesToPrivateKey(userSecurity.getPrivateKey());
 
             byte[] bytesEmail = Base64.getDecoder().decode(user.getEmail());
 
@@ -101,15 +101,20 @@ public class UsuarioService {
     public ResponseEntity<UserWithToken> update(String usuarioId, UserDto usuario) throws Exception {
         Optional<Usuario> userExist = this.usuarioRepository.findByUsername(usuario.username());
 
-        if (userExist.isPresent() && userExist.get().getId() != usuarioId) {
+        
+        if (userExist.isPresent() && !userExist.get().getId().equals(usuarioId)) {
+            System.out.println(usuarioId);
+            System.out.println(userExist.get().getId());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+    
+        System.out.println("Teste");
 
         Usuario usuarioAtualizado = this.getById(usuarioId);
 
-        KeyPair chaves = criptografia.gerarChave();
+        SecretKey chaves = criptografia.gerarChave();
 
-        byte[] emailCriptografado = criptografia.criptografar(usuarioAtualizado.getEmail(), chaves.getPublic());
+        byte[] emailCriptografado = criptografia.criptografar(usuario.email(), chaves);
 
         usuarioAtualizado.setEmail(Base64.getEncoder().encodeToString(emailCriptografado));
 
@@ -117,8 +122,7 @@ public class UsuarioService {
 
         Usuario response = this.usuarioRepository.save(usuarioAtualizado);
 
-        userSecurityService.updatePrivateKey(usuarioId, chaves.getPrivate(), criptografia.getAlgoritmo(),
-                criptografia.getKeySize());
+        userSecurityService.updatePrivateKey(usuarioId, chaves, criptografia.getAlgoritmo());
 
         String token = this.jwtService.generateToken(response);
 

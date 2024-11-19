@@ -1,7 +1,5 @@
 package com.seguranca_info.demo.dto;
-
-import java.security.PrivateKey;
-
+import javax.crypto.SecretKey;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +12,7 @@ import lombok.Setter;
 public class UserSecurityDto {
     private String idUser;
 
-    private PrivateKey privateKey;
+    private SecretKey privateKey;
 
     private String algotimo;
-
-    private Integer keySize;
-
 }
