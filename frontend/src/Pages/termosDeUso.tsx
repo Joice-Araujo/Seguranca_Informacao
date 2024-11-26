@@ -52,8 +52,9 @@ export function TermosDeUso() {
       <div className="mx-auto my-auto">
         <div className="flex flex-col">
           <div className="mb-5">
+            <h1 className="text-4xl mb-8">Termos de Uso</h1>
             <Input
-              label="Termo obrigatório:"
+              label="Obrigatório:"
               type="text"
               value={termoDeUso.descricao}
               setValue={(value: string) => handleDesc(value)}
@@ -69,12 +70,12 @@ export function TermosDeUso() {
               inputClassName="inputLogin"
             />
             <div className="mt-4">
-              <h3 className="text-3xl mb-4">Termos Opcionais:</h3>
+              <h3 className="text-3xl mb-4">Opcional:</h3>
               {termoDeUso.opcoes.map((opcao, index) => (
                 <div className="flex flex-row mr-3 justify-center items-center">
                   <Input
                     key={index}
-                    label="Termo Opcional:"
+                    label="Descrição:"
                     type="text"
                     value={opcao.descricao}
                     setValue={(value: string) =>
