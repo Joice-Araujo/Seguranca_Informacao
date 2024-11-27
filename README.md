@@ -37,7 +37,7 @@ Cada atividade apresenta um ponto da LGPD aplicado no projeto, demonstrando como
 
 > Os termos de uso referem-se ao documento que informa o usuário dos dados sobre como as informações serão coletadas, tratadas e protegidas. De acordo com a LGPD, é fundamental que os Termos de Uso sejam claros, acessíveis e expliquem as finalidades específicas para o tratamento dos dados pessoais, garantindo o consentimento explícito do usuário.
 
-:sparkles: Atividade 01 ([Link da Pasta](01_Atividade)):  Em Andamento :construction:
+
 
 <br>
 
@@ -46,7 +46,7 @@ Cada atividade apresenta um ponto da LGPD aplicado no projeto, demonstrando como
 
 > A transparência de dados é um dos princípios fundamentais da LGPD. Ela assegura que o usuário dos dados possa, a qualquer momento, consultar informações sobre o tratamento dos seus dados, incluindo a finalidade, o responsável e os processos utilizados. Isso envolve a criação de mecanismos que permitam o fácil acesso a essas informações pelo usuário.
 
-:sparkles: Atividade 02 ([Link da Pasta](02_Atividade)):  Em Andamento :construction:
+
 
 <br>
 
@@ -55,7 +55,7 @@ Cada atividade apresenta um ponto da LGPD aplicado no projeto, demonstrando como
 
 > A exclusão de dados, ou o direito ao esquecimento, garante ao usuário a possibilidade de solicitar a eliminação de seus dados pessoais, quando o tratamento não for mais necessário ou quando houver revogação do consentimento. Segundo a LGPD, o controlador dos dados é obrigado a atender essa solicitação, salvo em situações em que haja obrigação legal de manter os dados.
 
-:sparkles: Atividade 03 ([Link da Pasta](03_Atividade)):  Em Andamento :construction:
+
 
 <br>
 
